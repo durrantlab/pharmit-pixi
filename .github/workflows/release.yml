@@ -1,0 +1,74 @@
+name: release
+
+# Build the pharmit conda package and attach it to a GitHub Release
+# whenever a version tag (v*) is pushed.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write          # needed to create the release and upload assets
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo (with smina submodule)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive   # pulls external/smina at the pinned commit
+
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          # no environment to install for the repo itself; we only need pixi
+          # available so we can `pixi exec rattler-build`.
+          run-install: false
+
+      - name: Build conda package
+        run: |
+          mkdir -p dist
+          pixi exec rattler-build build \
+            --recipe recipe/recipe.yaml \
+            --output-dir dist \
+            --no-test           # skip in-sandbox test; we smoke-test below instead
+
+      - name: Locate built package
+        id: pkg
+        run: |
+          PKG="$(find dist -name 'pharmit-*.conda' | head -1)"
+          test -n "$PKG" || { echo "no .conda produced" >&2; exit 1; }
+          echo "path=$PKG" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "$PKG")" >> "$GITHUB_OUTPUT"
+          echo "built: $PKG"
+
+      - name: Smoke-test the package in a fresh env
+        run: |
+          # install the just-built package from the local dist channel and run it
+          pixi exec \
+            --channel "file://$PWD/dist" \
+            --channel conda-forge \
+            --spec pharmit \
+            -- pharmit 2>&1 | grep -q dbcreate \
+            && echo "PACKAGE OK" \
+            || { echo "PACKAGE FAILED TO RUN" >&2; exit 1; }
+
+      - name: Create release and attach the package
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.pkg.outputs.path }}
+          body: |
+            Prebuilt `pharmit` conda package (linux-64) for tag ${{ github.ref_name }}.
+
+            This is a build of the upstream pharmit/smina tools against a modern
+            conda-forge toolchain. To use it in a pixi project:
+
+            1. Download the attached `.conda` file.
+            2. Install it (runtime deps resolve from conda-forge):
+
+               ```
+               pixi add --channel conda-forge ./${{ steps.pkg.outputs.name }}
+               ```
+
+            Linux-64 only. See the repository README for build details and license/attribution.
