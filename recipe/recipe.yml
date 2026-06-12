@@ -1,0 +1,70 @@
+# rattler-build recipe for pharmit (pharmacophore search CLI).
+# Build once into a .conda artifact; consuming pixi projects add the channel
+# and `pixi add pharmit` to get the binary on PATH.
+#
+# Build with:
+#   pixi exec rattler-build build --recipe recipe/recipe.yaml --output-dir /ix/.../channel
+#
+# The build compiles smina (vendored submodule) + pharmit against conda-forge
+# libs, applies the source patches, and installs build/pharmit to $PREFIX/bin.
+
+schema_version: 1
+
+context:
+  version: "0.1.0"
+
+package:
+  name: pharmit
+  version: ${{ version }}
+
+source:
+  # Build from the local checkout (run rattler-build from the repo root so the
+  # submodule is already populated). Alternatively use a git: source with the
+  # submodule fetched in build.sh.
+  - path: ..
+
+build:
+  number: 0
+  script:
+    interpreter: bash
+    file: build.sh
+
+requirements:
+  build:
+    - ${{ compiler('cxx') }}
+    - ${{ compiler('c') }}
+    - cmake >=3.20
+    - make
+  host:
+    # libraries linked at build time (mirror your pixi.toml [dependencies])
+    - boost-cpp 1.85.*
+    - eigen
+    - openbabel 3.1.*
+    - glpk
+    - lemon
+    - ann
+    - bitmagic
+    - jsoncpp
+    - gperftools
+    - libcurl
+    - cairo
+    - coincbc
+    - zlib
+  run:
+    # libraries needed at runtime by the installed binary. conda's run_exports
+    # usually pin these automatically from host, but list the key shared-lib
+    # deps explicitly to be safe.
+    - openbabel 3.1.*
+    - boost-cpp 1.85.*
+    - ann
+    - jsoncpp
+    - gperftools
+
+tests:
+  - script:
+      # binary is on PATH and runs (exits non-zero with no command — that's fine)
+      - if pharmit 2>&1 | grep -q dbcreate; then echo "ok"; else exit 1; fi
+
+about:
+  summary: "Pharmit pharmacophore search CLI (pharma/dbcreate/dbsearch), built against a modern conda toolchain."
+  homepage: https://github.com/nacefguessaymi/pharmit
