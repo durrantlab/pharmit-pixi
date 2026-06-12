@@ -39,8 +39,9 @@ pixi add https://github.com/durrantlab/pharmit-pixi/releases/download/v0.1.3/pha
 ```
 
 pixi pulls the runtime dependencies (OpenBabel, Boost, etc.) from conda-forge
-automatically. Then:
+automatically. 
 
+Then:
 ```bash
 pixi run pharmit dbsearch -dbdir=DB -in=query.json -out=hits.sdf
 ```
