@@ -32,10 +32,10 @@ packaging only.
 
 Install the prebuilt CLI into a [pixi](https://pixi.sh) project directly from a
 release (Linux-64). Grab the latest `.conda` asset URL from the
-[Releases page](https://github.com/durrantlab/pharmit-dl/releases) and:
+[Releases page](https://github.com/durrantlab/pharmit-pixi/releases) and:
 
 ```bash
-pixi add https://github.com/durrantlab/pharmit-dl/releases/download/v0.1.3/pharmit-0.1.3-h41f06ac_0.conda
+pixi add https://github.com/durrantlab/pharmit-pixi/releases/download/v0.1.3/pharmit-0.1.3-h41f06ac_0.conda
 ```
 
 pixi pulls the runtime dependencies (OpenBabel, Boost, etc.) from conda-forge
@@ -64,8 +64,8 @@ specific upstream commit). You must clone recursively so the submodule is
 populated:
 
 ```bash
-git clone --recursive https://github.com/durrantlab/pharmit-dl.git
-cd pharmit-dl
+git clone --recursive https://github.com/durrantlab/pharmit-pixi.git
+cd pharmit-pixi
 ```
 
 If you already cloned without `--recursive`, initialize the submodule:
@@ -197,7 +197,7 @@ Releases are built automatically by the GitHub Actions workflow
 Consumers then install directly from the release URL:
 
 ```bash
-pixi add https://github.com/durrantlab/pharmit-dl/releases/download/v0.1.3/pharmit-0.1.3-<hash>.conda
+pixi add https://github.com/durrantlab/pharmit-pixi/releases/download/v0.1.3/pharmit-0.1.3-<hash>.conda
 ```
 
 pixi reads the package's embedded dependency metadata and pulls the runtime
