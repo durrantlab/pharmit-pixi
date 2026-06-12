@@ -3,7 +3,7 @@
 # and `pixi add pharmit` to get the binary on PATH.
 #
 # Build with:
-#   pixi exec rattler-build build --recipe recipe/recipe.yaml --output-dir /ix/.../channel
+#   pixi exec rattler-build build --recipe recipe/recipe.yml --output-dir /ix/.../channel
 #
 # The build compiles smina (vendored submodule) + pharmit against conda-forge
 # libs, applies the source patches, and installs build/pharmit to $PREFIX/bin.
@@ -11,7 +11,7 @@
 schema_version: 1
 
 context:
-  version: "0.1.1"
+  version: "0.1.2"
 
 package:
   name: pharmit
