@@ -1,0 +1,3 @@
+[submodule "external/smina"]
+	path = external/smina
+	url = https://git.code.sf.net/p/smina/code
