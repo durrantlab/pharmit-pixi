@@ -1,0 +1,77 @@
+diff --git a/src/main.cpp b/src/main.cpp
+index 90588db..4552b65 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -44,7 +44,7 @@ See the LICENSE file provided with the distribution for more information.
+ #include "queryparsers.h"
+ #include "Timer.h"
+ #include "MolFilter.h"
+-#include "PharmerServer.h"
++// #include "PharmerServer.h"
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <ShapeConstraints.h>
+@@ -1121,63 +1121,6 @@ int main(int argc, char *argv[])
+ 	{
+ 	  handle_fixsmina_cmd();
+ 	}
+-	else if (Cmd == "server")
+-	{
+-		vector<filesystem::path> prefixpaths;
+-		boost::unordered_map<string, StripedSearchers > databases;
+-
+-                //total hack time - fcgi uses select which can't
+-		//deal with file descriptors higher than 1024, so let's reserve some
+-		#define MAXRESERVEDFD (SERVERTHREADS*2)
+-		int reservedFD[MAXRESERVEDFD] = {0,};
+-		for(unsigned i = 0; i < MAXRESERVEDFD; i++)
+-		{
+-				reservedFD[i] = open("/dev/null",O_RDONLY);
+-		}
+-		//loadDatabases will open a whole bunch of files
+-		if(Prefixes.length() > 0 && Database.size() > 0)
+-		{
+-			cerr << "Cannot specify both dbdir and prefixes\n";
+-			exit(-1);
+-		}
+-		else if(Database.size() > 0)
+-		{
+-			//only one subset
+-			vector<filesystem::path> dbpaths;
+-			for(unsigned i = 0, n = Database.size(); i < n; i++)
+-			{
+-				dbpaths.push_back(filesystem::path(Database[i]));
+-			}
+-			loadDatabases(dbpaths, databases[""]);
+-		}
+-		else
+-		{
+-			//use prefixes
+-			ifstream prefixes(Prefixes.c_str());
+-			string line;
+-			while(getline(prefixes, line))
+-			{
+-				if(filesystem::exists(line))
+-				{
+-					prefixpaths.push_back(filesystem::path(line));
+-				}
+-				else
+-					cerr << line << " does not exist\n";
+-			}
+-			if(prefixpaths.size() == 0)
+-			{
+-				cerr << "No valid prefixes\n";
+-				exit(-1);
+-			}
+-			loadFromPrefixes(prefixpaths, databases);
+-		}
+-		//now free reserved fds
+-		for(unsigned i = 0; i < MAXRESERVEDFD; i++)
+-		{
+-				close(reservedFD[i]);
+-		}
+-		pharmer_server(Port, prefixpaths, databases, LogDir, MinServer, MinPort);
+-	}
+ 	else
+ 	{
+ 		cl::PrintHelpMessage();

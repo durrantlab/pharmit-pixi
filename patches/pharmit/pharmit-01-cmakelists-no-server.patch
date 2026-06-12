@@ -1,0 +1,61 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f23102c..6bb58c2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -44,12 +44,10 @@ set( MAIN_SOURCES
+      PharmerServerCommands.h
+      ReadMCMol.h ShapeResults.h
+      Corresponder.h MolProperties.h 
+-     PharmerServer.cpp
+      SimpleFingers.h TripleIndexer.h
+      BoundingBox.cpp cors.h MTQueue.h PharmerServer.h RMSD.cpp SphereGrid.cpp Triplet.cpp
+      BoundingBox.h dbloader.cpp params.h pharminfo.cpp RMSD.h SphereGrid.h TripletFingerprint.cpp
+      BumpAllocator.h dbloader.h pharmarec.cpp pharminfo.h ShapeConstraints.cpp SpinLock.h TripletFingerprint.h
+-     cgi.cpp 
+      FloatCoord.h pharmarec.h ShapeConstraints.h SPSCQueue.h Triplet.h
+      cgi.h
+      pharmerdb.cpp PMol.h ThreadCounter.h tripletmatching.cpp
+@@ -61,7 +59,7 @@ set( MAIN_SOURCES
+    )
+ 
+ if (NOT LEMON_DIR)
+-  set(LEMON_DIR "/usr/lib/cmake/") #this is where ubuntu puts the cmake config file
++  # LEMON_DIR hardcode removed — conda has no LEMONConfig.cmake
+ endif()
+ 
+ # add external libraries
+@@ -69,10 +67,9 @@ find_package( Boost 1.53 COMPONENTS system regex filesystem program_options iost
+ find_package( OpenBabel3 REQUIRED )
+ find_package( jsoncpp REQUIRED )
+ find_package( Eigen3 REQUIRED )
+-find_package( LEMON REQUIRED )
++find_path(LEMON_INCLUDE_DIRS lemon/lp.h HINTS "${CMAKE_PREFIX_PATH}/include")
++find_library(LEMON_LIBRARY NAMES emon lemon HINTS "${CMAKE_PREFIX_PATH}/lib")
+ find_package( Gperftools REQUIRED )
+-find_package( Cgicc REQUIRED )
+-find_package( Fcgi COMPONENTS streambuf REQUIRED )
+ find_package( ANN REQUIRED )
+ find_package( CURL REQUIRED )
+ 
+@@ -88,10 +85,8 @@ include_directories( ${LEMON_INCLUDE_DIRS} )
+ include_directories( ${bm_SOURCE_DIR} )
+ include_directories ("${PROJECT_SOURCE_DIR}/CommandLine2")
+ include_directories( ${GPERFTOOLS_INCLUDE_DIR} )
+-include_directories( ${CGICC_INCLUDE_DIR} )
+ include_directories( ${ANN_INCLUDE_DIR} )
+ include_directories( ${CURL_INCLUDE_DIR} )
+-include_directories( ${FCGI_INCLUDE_DIR} )
+ include_directories( ${CMAKE_CURRENT_SOURCE_DIR})
+ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shapedb)
+ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shapedb/molecules)
+@@ -102,8 +97,8 @@ add_definitions(-DEIGEN_STACK_ALLOCATION_LIMIT=0)
+ 
+ # add the executable
+ add_executable(pharmit ${MAIN_SOURCES} ${SHAPEDB_SOURCES})
+-target_link_libraries(pharmit jsoncpp ${SMINALIB} ${GPERFTOOLS_LIBRARIES} ${CGICC_LIBRARY} ${Boost_LIBRARIES} 
+-                      ${OpenBabel3_LIBRARY} openbabel ${jsoncpp_LIBRARIES} ${EIGEN3_LIBRARY} ${LEMON_LIBRARY} ${ANN_LIBRARY} ${CURL_LIBRARY} ${FCGI_LIBRARIES})
++target_link_libraries(pharmit jsoncpp ${SMINALIB} ${GPERFTOOLS_LIBRARIES}  ${Boost_LIBRARIES} 
++                      ${OpenBabel3_LIBRARY} openbabel ${jsoncpp_LIBRARIES} ${EIGEN3_LIBRARY} ${LEMON_LIBRARY} ${ANN_LIBRARY} ${CURL_LIBRARY})
+ 
+ add_executable(shapedb ${SHAPEDB_SOURCES} shapedb/main.cpp)
+ target_link_libraries(shapedb  ${Boost_LIBRARIES} ${OpenBabel3_LIBRARY} openbabel ${ANN_LIBRARY} )
