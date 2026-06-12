@@ -31,6 +31,7 @@ jobs:
           mkdir -p dist
           pixi exec rattler-build build \
             --recipe recipe/recipe.yml \
+            -m recipe/variants.yml \
             --output-dir dist \
             --no-test           # skip in-sandbox test; we smoke-test below instead
 

@@ -33,6 +33,7 @@ requirements:
   build:
     - ${{ compiler('cxx') }}
     - ${{ compiler('c') }}
+    - ${{ stdlib('c') }}
     - cmake >=3.20
     - make
   host:
@@ -67,4 +68,4 @@ tests:
 
 about:
   summary: "Pharmit pharmacophore search CLI (pharma/dbcreate/dbsearch), built against a modern conda toolchain."
-  homepage: https://github.com/nacefguessaymi/pharmit
+  homepage: https://github.com/durrantlab/pharmit-dl
