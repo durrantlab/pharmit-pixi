@@ -63,13 +63,20 @@ jobs:
             Prebuilt `pharmit` conda package (linux-64) for tag ${{ github.ref_name }}.
 
             This is a build of the upstream pharmit/smina tools against a modern
-            conda-forge toolchain. To use it in a pixi project:
+            conda-forge toolchain. To use it in a pixi project either you can add
+            the link to the .conda file included in this release by running:
 
-            1. Download the attached `.conda` file.
-            2. Install it (runtime deps resolve from conda-forge):
+            ```
+            pixi add https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ steps.pkg.outputs.name }}
+            ```
+            
+            or it can be downloaded and added locally:
 
-               ```
-               pixi add --channel conda-forge ./${{ steps.pkg.outputs.name }}
-               ```
+              1. Download the attached `.conda` file.
+              2. Install it (runtime deps resolve from conda-forge):
 
+            ```
+            pixi add pharmit @ ./${{ steps.pkg.outputs.name }}
+            ```
+            
             Linux-64 only. See the repository README for build details and license/attribution.
