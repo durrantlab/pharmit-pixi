@@ -8,6 +8,7 @@ rm -rf "$ROOT/build"
 
 cmake -S "$ROOT/src" -B "$ROOT/build" \
   -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON \
   -DSMINA_DIR="$ROOT/external/smina" \
   -DOPENBABEL3_INCLUDE_DIR="$PREFIX/include/openbabel3" \
   -DOPENBABEL3_LIBRARIES="$PREFIX/lib/libopenbabel.so" \

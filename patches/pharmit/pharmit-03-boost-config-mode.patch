@@ -1,0 +1,14 @@
+--- a/src/CMakeLists.txt	2026-09-15 13:40:24.019036458 -0400
++++ b/src/CMakeLists.txt	2026-09-15 13:40:50.337604437 -0400
+@@ -63,7 +63,10 @@
+ endif()
+ 
+ # add external libraries
+-find_package( Boost 1.53 COMPONENTS system regex filesystem program_options iostreams thread serialization date_time REQUIRED )
++if(POLICY CMP0167)
++  cmake_policy(SET CMP0167 NEW)
++endif()
++find_package( Boost 1.53 CONFIG COMPONENTS regex filesystem program_options iostreams thread serialization date_time REQUIRED )
+ find_package( OpenBabel3 REQUIRED )
+ find_package( jsoncpp REQUIRED )
+ find_package( Eigen3 REQUIRED )

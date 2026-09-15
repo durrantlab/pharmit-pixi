@@ -66,8 +66,10 @@ echo "==> [2/5] applying source patches"
 apply_patch "$SMINA_DIR" "$PATCH_DIR/smina/smina-01-filesystem-api.patch"
 apply_patch "$SMINA_DIR" "$PATCH_DIR/smina/smina-02-cxx14.patch"
 apply_patch "$SMINA_DIR" "$PATCH_DIR/smina/smina-03-boost-config-mode.patch"
+
 apply_patch "$REPO_ROOT" "$PATCH_DIR/pharmit/pharmit-01-cmakelists-no-server.patch"
 apply_patch "$REPO_ROOT" "$PATCH_DIR/pharmit/pharmit-02-main-no-server.patch"
+apply_patch "$REPO_ROOT" "$PATCH_DIR/pharmit/pharmit-03-boost-config-mode.patch"
 
 # ---- 3-5. delegate to the per-step scripts -------------------------------
 echo "==> [3/5] applying environment fixes (fix-env.sh)"
