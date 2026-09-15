@@ -56,7 +56,6 @@ requirements:
     # usually pin these automatically from host, but list the key shared-lib
     # deps explicitly to be safe.
     - openbabel 3.1.*
-    - boost-cpp 1.85.*
     - ann
     - jsoncpp
     - gperftools
