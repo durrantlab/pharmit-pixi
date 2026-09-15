@@ -1,0 +1,38 @@
+--- a/CMakeLists.txt	2026-09-15 11:50:41.284570332 -0400
++++ b/CMakeLists.txt	2026-09-15 11:50:13.074156078 -0400
+@@ -41,20 +41,24 @@
+ )
+ set_target_properties(libsmina PROPERTIES OUTPUT_NAME "smina")
+ target_include_directories(libsmina PUBLIC src/lib/ src/lib/CommandLine2)
+-set(Boost_NO_BOOST_CMAKE ON)  #apparently required for newer boosts?
+-find_package(Boost REQUIRED  COMPONENTS 
+-  iostreams 
+-  timer 
+-  system 
+-  regex 
+-  thread 
+-  serialization 
+-  filesystem 
+-  program_options 
++set(Boost_NO_BOOST_CMAKE OFF)
++if(POLICY CMP0167)
++  cmake_policy(SET CMP0167 NEW)
++endif()
++find_package(Boost REQUIRED CONFIG COMPONENTS
++  iostreams
++  timer
++  regex
++  thread
++  serialization
++  filesystem
++  program_options
+   date_time
+ )
+ include_directories(libsmina ${Boost_INCLUDE_DIRS})
+-target_link_libraries(libsmina ${Boost_LIBRARIES})
++target_link_libraries(libsmina Boost::iostreams Boost::timer Boost::regex
++  Boost::thread Boost::serialization Boost::filesystem Boost::program_options
++  Boost::date_time)
+ message("-- Found Boost include files at ${Boost_INCLUDE_DIRS}")
+ message("-- Found Boost libraries at ${Boost_LIBRARIES}")
+ 
