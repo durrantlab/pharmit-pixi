@@ -11,7 +11,7 @@
 schema_version: 1
 
 context:
-  version: "0.1.5"
+  version: "0.1.6"
 
 package:
   name: pharmit
@@ -38,9 +38,9 @@ requirements:
     - make
   host:
     # libraries linked at build time (mirror your pixi.toml [dependencies])
-    - libboost-devel
+    - libboost-devel >=1.90,<1.91
     - eigen
-    - openbabel 3.1.*
+    - openbabel >=3.2,<4
     - glpk
     - lemon
     - ann
@@ -48,14 +48,13 @@ requirements:
     - jsoncpp
     - gperftools
     - libcurl
-    - cairo
     - coincbc
     - zlib
   run:
     # libraries needed at runtime by the installed binary. conda's run_exports
     # usually pin these automatically from host, but list the key shared-lib
     # deps explicitly to be safe.
-    - openbabel 3.1.*
+    - openbabel >=3.2,<4
     - ann
     - jsoncpp
     - gperftools
